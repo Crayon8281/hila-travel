@@ -13,6 +13,7 @@ import { I18nManager } from "react-native";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
+import { AssetProvider } from "@/services/AssetContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -54,11 +55,25 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
-    </ThemeProvider>
+    <AssetProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="asset/[id]"
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="asset/new"
+            options={{ headerShown: true, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="asset/edit/[id]"
+            options={{ headerShown: true }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </AssetProvider>
   );
 }
