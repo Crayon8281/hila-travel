@@ -1,0 +1,64 @@
+import "@/global.css";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import {
+  Heebo_400Regular,
+  Heebo_500Medium,
+  Heebo_700Bold,
+} from "@expo-google-fonts/heebo";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { I18nManager } from "react-native";
+import "react-native-reanimated";
+
+import { useColorScheme } from "@/components/useColorScheme";
+
+export { ErrorBoundary } from "expo-router";
+
+export const unstable_settings = {
+  initialRouteName: "(tabs)",
+};
+
+// Force RTL for Hebrew
+I18nManager.forceRTL(true);
+I18nManager.allowRTL(true);
+
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    Heebo: Heebo_400Regular,
+    "Heebo-Medium": Heebo_500Medium,
+    "Heebo-Bold": Heebo_700Bold,
+  });
+
+  useEffect(() => {
+    if (error) throw error;
+  }, [error]);
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
+  return <RootLayoutNav />;
+}
+
+function RootLayoutNav() {
+  const colorScheme = useColorScheme();
+
+  return (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+      </Stack>
+    </ThemeProvider>
+  );
+}
