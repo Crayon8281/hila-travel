@@ -5,6 +5,7 @@ import {
   Trash2,
   ChevronLeft,
   Clock,
+  Eye,
 } from "lucide-react-native";
 import { useTripContext } from "@/services/TripContext";
 import { useAssetContext } from "@/services/AssetContext";
@@ -102,6 +103,24 @@ export default function TripDashboardScreen() {
               {formatHebrewDate(trip.end_date)}
             </Text>
           </View>
+
+          {/* Client Timeline Button */}
+          <Pressable
+            onPress={() => router.push(`/trip/client/${id}`)}
+            className="bg-gold rounded-xl mt-4 py-3 flex-row items-center justify-center"
+            style={{
+              shadowColor: "#D4AF37",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 4,
+            }}
+          >
+            <Eye size={16} color="#001F3F" />
+            <Text className="font-heebo-bold text-sm text-navy mr-2">
+              תצוגת לקוח
+            </Text>
+          </Pressable>
         </View>
 
         {/* Section Title */}

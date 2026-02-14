@@ -94,6 +94,10 @@ function RootLayoutNav() {
               name="trip/add-activity"
               options={{ headerShown: true, presentation: "modal" }}
             />
+            <Stack.Screen
+              name="trip/client/[id]"
+              options={{ headerShown: false }}
+            />
           </Stack>
         </ThemeProvider>
       </TripProvider>

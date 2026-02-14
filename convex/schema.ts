@@ -13,6 +13,8 @@ export default defineSchema({
     tags: v.array(v.string()),
     cost_price: v.number(),
     selling_price: v.number(),
+    phone: v.optional(v.string()),
+    address: v.optional(v.string()),
   })
     .index("by_type", ["type"])
     .index("by_country", ["country"])
