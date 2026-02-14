@@ -3,9 +3,11 @@ import {
   Trip,
   TripDay,
   TripActivity,
+  DayTemplate,
   generateTripId,
   generateDayId,
   generateActivityId,
+  generateTemplateId,
   generateDaysForTrip,
   SAMPLE_TRIPS,
 } from "@/services/tripData";
@@ -16,6 +18,10 @@ export function useTrips() {
   const [trips, setTrips] = useState<Trip[]>(SAMPLE_TRIPS);
   const [tripDays, setTripDays] = useState<TripDay[]>([]);
   const [tripActivities, setTripActivities] = useState<TripActivity[]>([]);
+  const [dayTemplates, setDayTemplates] = useState<DayTemplate[]>([]);
+  const [polishedDescriptions, setPolishedDescriptions] = useState<
+    Map<string, string>
+  >(new Map());
 
   // === Trip CRUD ===
 
@@ -164,6 +170,91 @@ export function useTrips() {
     [tripDays, tripActivities]
   );
 
+  // === Day Templates ===
+
+  const saveDayAsTemplate = useCallback(
+    (dayId: string, name: string, description: string) => {
+      const activities = tripActivities
+        .filter((a) => a.dayId === dayId)
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((a) => ({
+          assetId: a.assetId,
+          start_time: a.start_time,
+          custom_note: a.custom_note,
+          sort_order: a.sort_order,
+        }));
+
+      if (activities.length === 0) return null;
+
+      const template: DayTemplate = {
+        _id: generateTemplateId(),
+        name,
+        description,
+        activities,
+        createdAt: Date.now(),
+      };
+
+      setDayTemplates((prev) => [template, ...prev]);
+      return template._id;
+    },
+    [tripActivities]
+  );
+
+  const loadTemplateToDay = useCallback(
+    (templateId: string, dayId: string) => {
+      const template = dayTemplates.find((t) => t._id === templateId);
+      if (!template) return;
+
+      // Remove existing activities for this day
+      setTripActivities((prev) => {
+        const withoutDay = prev.filter((a) => a.dayId !== dayId);
+        const newActivities = template.activities.map((ta, idx) => ({
+          _id: generateActivityId(),
+          dayId,
+          assetId: ta.assetId,
+          start_time: ta.start_time,
+          custom_note: ta.custom_note,
+          sort_order: idx + 1,
+        }));
+        return [...withoutDay, ...newActivities];
+      });
+    },
+    [dayTemplates]
+  );
+
+  const removeTemplate = useCallback((templateId: string) => {
+    setDayTemplates((prev) => prev.filter((t) => t._id !== templateId));
+  }, []);
+
+  // === Polished Descriptions ===
+
+  const setPolishedDescription = useCallback(
+    (assetId: string, polished: string) => {
+      setPolishedDescriptions((prev) => {
+        const next = new Map(prev);
+        next.set(assetId, polished);
+        return next;
+      });
+    },
+    []
+  );
+
+  const getPolishedDescription = useCallback(
+    (assetId: string) => polishedDescriptions.get(assetId) ?? null,
+    [polishedDescriptions]
+  );
+
+  const clearPolishedDescription = useCallback(
+    (assetId: string) => {
+      setPolishedDescriptions((prev) => {
+        const next = new Map(prev);
+        next.delete(assetId);
+        return next;
+      });
+    },
+    []
+  );
+
   return {
     trips,
     addTrip,
@@ -179,5 +270,14 @@ export function useTrips() {
     updateActivityOrder,
     getActivityCountForDay,
     getTripTotalCost,
+    // Templates
+    dayTemplates,
+    saveDayAsTemplate,
+    loadTemplateToDay,
+    removeTemplate,
+    // Polished descriptions
+    setPolishedDescription,
+    getPolishedDescription,
+    clearPolishedDescription,
   };
 }

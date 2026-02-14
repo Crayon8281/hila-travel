@@ -15,6 +15,8 @@ export default defineSchema({
     selling_price: v.number(),
     phone: v.optional(v.string()),
     address: v.optional(v.string()),
+    lat: v.optional(v.number()),
+    lng: v.optional(v.number()),
   })
     .index("by_type", ["type"])
     .index("by_country", ["country"])

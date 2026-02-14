@@ -105,4 +105,23 @@ export function formatHebrewDate(dateStr: string): string {
   return `יום ${dayOfWeek}, ${day} ${month}`;
 }
 
+export interface DayTemplate {
+  _id: string;
+  name: string;
+  description: string;
+  activities: {
+    assetId: string;
+    start_time: string;
+    custom_note: string;
+    sort_order: number;
+  }[];
+  createdAt: number;
+}
+
+let nextTemplateId = 9000;
+
+export function generateTemplateId(): string {
+  return String(nextTemplateId++);
+}
+
 export const SAMPLE_TRIPS: Trip[] = [];

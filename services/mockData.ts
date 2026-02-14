@@ -13,6 +13,8 @@ export interface Asset {
   selling_price: number;
   phone?: string;
   address?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export const ASSET_TYPES = [
@@ -56,6 +58,8 @@ export const SAMPLE_ASSETS: Asset[] = [
     selling_price: 1200,
     phone: "+39-06-328881",
     address: "Via del Babuino, 9, 00187 Roma RM, Italy",
+    lat: 41.9109,
+    lng: 12.4818,
   },
   {
     _id: "2",
@@ -77,6 +81,8 @@ export const SAMPLE_ASSETS: Asset[] = [
     selling_price: 500,
     phone: "+39-055-242757",
     address: "Via Ghibellina, 87, 50122 Firenze FI, Italy",
+    lat: 43.7696,
+    lng: 11.2628,
   },
   {
     _id: "3",
@@ -97,6 +103,8 @@ export const SAMPLE_ASSETS: Asset[] = [
     cost_price: 280,
     selling_price: 420,
     address: "Rue de Rivoli, 75001 Paris, France",
+    lat: 48.8606,
+    lng: 2.3376,
   },
   {
     _id: "4",
@@ -118,6 +126,8 @@ export const SAMPLE_ASSETS: Asset[] = [
     selling_price: 3100,
     phone: "+960-660-0304",
     address: "Kunfunadhoo Island, Baa Atoll, Maldives",
+    lat: 5.1120,
+    lng: 73.4390,
   },
   {
     _id: "5",
@@ -138,6 +148,8 @@ export const SAMPLE_ASSETS: Asset[] = [
     cost_price: 150,
     selling_price: 250,
     address: "Gionmachi Minamigawa, Higashiyama Ward, Kyoto, Japan",
+    lat: 35.0036,
+    lng: 135.7785,
   },
   {
     _id: "6",
@@ -159,6 +171,8 @@ export const SAMPLE_ASSETS: Asset[] = [
     selling_price: 600,
     phone: "+41-81-288-6565",
     address: "Bahnhofplatz 9, 8001 Zürich, Switzerland",
+    lat: 47.3769,
+    lng: 8.5417,
   },
 ];
 
