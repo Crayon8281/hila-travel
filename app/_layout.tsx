@@ -72,6 +72,10 @@ function RootLayoutNav() {
             name="asset/edit/[id]"
             options={{ headerShown: true }}
           />
+          <Stack.Screen
+            name="asset/bulk-import"
+            options={{ headerShown: true, presentation: "modal" }}
+          />
         </Stack>
       </ThemeProvider>
     </AssetProvider>

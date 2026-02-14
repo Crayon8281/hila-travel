@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { Plus, Package } from "lucide-react-native";
+import { Plus, Package, Link2 } from "lucide-react-native";
 import { useAssetContext } from "@/services/AssetContext";
 import { SearchBar } from "@/components/SearchBar";
 import { FilterChip } from "@/components/FilterChip";
@@ -80,17 +80,28 @@ export default function LibraryScreen() {
         </ScrollView>
       </View>
 
-      {/* Results count */}
+      {/* Results count + Actions */}
       <View className="flex-row items-center justify-between mx-4 mb-2">
-        <Pressable
-          onPress={() => router.push("/asset/new")}
-          className="flex-row items-center bg-gold rounded-xl px-4 py-2"
-        >
-          <Text className="font-heebo-bold text-sm text-white ml-1">
-            הוסף נכס
-          </Text>
-          <Plus size={16} color="#FFFFFF" />
-        </Pressable>
+        <View className="flex-row gap-2">
+          <Pressable
+            onPress={() => router.push("/asset/bulk-import")}
+            className="flex-row items-center bg-navy rounded-xl px-3 py-2"
+          >
+            <Text className="font-heebo-bold text-sm text-white ml-1">
+              ייבוא
+            </Text>
+            <Link2 size={14} color="#D4AF37" />
+          </Pressable>
+          <Pressable
+            onPress={() => router.push("/asset/new")}
+            className="flex-row items-center bg-gold rounded-xl px-3 py-2"
+          >
+            <Text className="font-heebo-bold text-sm text-white ml-1">
+              הוסף נכס
+            </Text>
+            <Plus size={16} color="#FFFFFF" />
+          </Pressable>
+        </View>
         <Text className="font-heebo text-sm text-navy-300">
           {assets.length} נכסים
         </Text>
