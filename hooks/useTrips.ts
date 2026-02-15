@@ -9,6 +9,8 @@ import {
   generateActivityId,
   generateTemplateId,
   generateDaysForTrip,
+  generateTripToken,
+  getTripShareUrl,
   SAMPLE_TRIPS,
 } from "@/services/tripData";
 
@@ -226,6 +228,49 @@ export function useTrips() {
     setDayTemplates((prev) => prev.filter((t) => t._id !== templateId));
   }, []);
 
+  // === Share Tokens (Deep Linking) ===
+
+  const generateShareToken = useCallback(
+    (tripId: string): string => {
+      const trip = trips.find((t) => t._id === tripId);
+      if (trip?.share_token) {
+        return trip.share_token; // Already has a token
+      }
+      const token = generateTripToken();
+      setTrips((prev) =>
+        prev.map((t) =>
+          t._id === tripId ? { ...t, share_token: token } : t
+        )
+      );
+      return token;
+    },
+    [trips]
+  );
+
+  const getTripByToken = useCallback(
+    (token: string): Trip | null => {
+      return trips.find((t) => t.share_token === token) ?? null;
+    },
+    [trips]
+  );
+
+  const getShareUrl = useCallback(
+    (tripId: string): string | null => {
+      const trip = trips.find((t) => t._id === tripId);
+      if (!trip?.share_token) return null;
+      return getTripShareUrl(trip.share_token);
+    },
+    [trips]
+  );
+
+  const revokeShareToken = useCallback((tripId: string) => {
+    setTrips((prev) =>
+      prev.map((t) =>
+        t._id === tripId ? { ...t, share_token: undefined } : t
+      )
+    );
+  }, []);
+
   // === Polished Descriptions ===
 
   const setPolishedDescription = useCallback(
@@ -270,6 +315,11 @@ export function useTrips() {
     updateActivityOrder,
     getActivityCountForDay,
     getTripTotalCost,
+    // Share Tokens (Deep Linking)
+    generateShareToken,
+    getTripByToken,
+    getShareUrl,
+    revokeShareToken,
     // Templates
     dayTemplates,
     saveDayAsTemplate,

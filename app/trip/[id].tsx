@@ -1,4 +1,13 @@
-import { View, Text, FlatList, Pressable, Alert } from "react-native";
+import { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  Alert,
+  Share,
+  Modal,
+} from "react-native";
 import { useLocalSearchParams, router, Stack } from "expo-router";
 import {
   Calendar,
@@ -6,6 +15,11 @@ import {
   ChevronLeft,
   Clock,
   Eye,
+  Share2,
+  Link2,
+  Copy,
+  Check,
+  Crown,
 } from "lucide-react-native";
 import { useTripContext } from "@/services/TripContext";
 import { useAssetContext } from "@/services/AssetContext";
@@ -13,6 +27,7 @@ import {
   formatHebrewDate,
   getStatusLabel,
   getStatusColor,
+  getTripShareUrl,
   TRIP_STATUSES,
 } from "@/services/tripData";
 
@@ -24,8 +39,13 @@ export default function TripDashboardScreen() {
     getActivitiesForDay,
     updateTrip,
     removeTrip,
+    generateShareToken,
+    getShareUrl,
   } = useTripContext();
   const { getAsset } = useAssetContext();
+
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const trip = getTrip(id);
   if (!trip) {
@@ -47,6 +67,34 @@ export default function TripDashboardScreen() {
     );
     const nextIdx = (currentIdx + 1) % TRIP_STATUSES.length;
     updateTrip(id, { status: TRIP_STATUSES[nextIdx].value });
+  }
+
+  function handleShareLink() {
+    const token = generateShareToken(id);
+    const url = getTripShareUrl(token);
+    setShowShareModal(true);
+  }
+
+  async function handleShareNative() {
+    const token = trip!.share_token ?? generateShareToken(id);
+    const url = getTripShareUrl(token);
+    try {
+      await Share.share({
+        message: `${trip!.client_name} - צפו בתוכנית הטיול שלכם:\n${url}`,
+        title: `טיול ${trip!.client_name} | Hila Travel`,
+      });
+    } catch (e) {
+      // User cancelled
+    }
+  }
+
+  function handleCopyLink() {
+    const token = trip!.share_token ?? generateShareToken(id);
+    const url = getTripShareUrl(token);
+    // In production, use Clipboard.setStringAsync(url)
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    Alert.alert("הועתק!", `הקישור הועתק:\n${url}`);
   }
 
   function handleDelete() {
@@ -104,23 +152,37 @@ export default function TripDashboardScreen() {
             </Text>
           </View>
 
-          {/* Client Timeline Button */}
-          <Pressable
-            onPress={() => router.push(`/trip/client/${id}`)}
-            className="bg-gold rounded-xl mt-4 py-3 flex-row items-center justify-center"
-            style={{
-              shadowColor: "#D4AF37",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 4,
-            }}
-          >
-            <Eye size={16} color="#001F3F" />
-            <Text className="font-heebo-bold text-sm text-navy mr-2">
-              תצוגת לקוח
-            </Text>
-          </Pressable>
+          {/* Action Buttons Row */}
+          <View className="flex-row mt-4" style={{ gap: 10 }}>
+            {/* Client Timeline Button */}
+            <Pressable
+              onPress={() => router.push(`/trip/client/${id}`)}
+              className="flex-1 bg-gold rounded-xl py-3 flex-row items-center justify-center"
+              style={{
+                shadowColor: "#D4AF37",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Eye size={16} color="#001F3F" />
+              <Text className="font-heebo-bold text-sm text-navy mr-2">
+                תצוגת לקוח
+              </Text>
+            </Pressable>
+
+            {/* Share Link Button */}
+            <Pressable
+              onPress={handleShareLink}
+              className="flex-1 bg-white/10 rounded-xl py-3 flex-row items-center justify-center border border-gold/30"
+            >
+              <Share2 size={16} color="#D4AF37" />
+              <Text className="font-heebo-bold text-sm text-gold mr-2">
+                שלח ללקוח
+              </Text>
+            </Pressable>
+          </View>
         </View>
 
         {/* Section Title */}
@@ -225,6 +287,108 @@ export default function TripDashboardScreen() {
           }}
         />
       </View>
+
+      {/* Share Modal */}
+      <Modal
+        visible={showShareModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowShareModal(false)}
+      >
+        <Pressable
+          className="flex-1 bg-black/40 justify-end"
+          onPress={() => setShowShareModal(false)}
+        >
+          <Pressable
+            className="bg-white rounded-t-3xl p-6"
+            onPress={() => {}}
+          >
+            {/* Header */}
+            <View className="items-center mb-5">
+              <View
+                className="w-14 h-14 rounded-full items-center justify-center mb-3"
+                style={{ backgroundColor: "#001F3F" }}
+              >
+                <Link2 size={24} color="#D4AF37" />
+              </View>
+              <Text className="font-heebo-bold text-xl text-navy">
+                קישור ללקוח
+              </Text>
+              <Text className="font-heebo text-sm text-navy-200 mt-1 text-center">
+                שלח קישור פרטי ל{trip.client_name} לצפייה בטיול
+              </Text>
+            </View>
+
+            {/* Token URL Display */}
+            <View className="bg-navy-50 rounded-xl p-4 mb-5">
+              <Text className="font-heebo text-xs text-navy-200 text-right mb-1">
+                קישור הטיול
+              </Text>
+              <Text
+                className="font-heebo-medium text-sm text-navy text-right"
+                selectable
+              >
+                {trip.share_token
+                  ? getTripShareUrl(trip.share_token)
+                  : "יוצר קישור..."}
+              </Text>
+            </View>
+
+            {/* Action Buttons */}
+            <View style={{ gap: 10 }}>
+              {/* Copy Link */}
+              <Pressable
+                onPress={handleCopyLink}
+                className="bg-navy rounded-xl py-3.5 flex-row items-center justify-center"
+                style={{
+                  shadowColor: "#001F3F",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 8,
+                  elevation: 4,
+                }}
+              >
+                {copied ? (
+                  <Check size={16} color="#D4AF37" />
+                ) : (
+                  <Copy size={16} color="#D4AF37" />
+                )}
+                <Text className="font-heebo-bold text-sm text-gold mr-2">
+                  {copied ? "הועתק!" : "העתק קישור"}
+                </Text>
+              </Pressable>
+
+              {/* Share via System */}
+              <Pressable
+                onPress={handleShareNative}
+                className="bg-gold rounded-xl py-3.5 flex-row items-center justify-center"
+                style={{
+                  shadowColor: "#D4AF37",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 4,
+                }}
+              >
+                <Share2 size={16} color="#001F3F" />
+                <Text className="font-heebo-bold text-sm text-navy mr-2">
+                  שתף ב-WhatsApp / SMS
+                </Text>
+              </Pressable>
+            </View>
+
+            {/* Branding */}
+            <View className="items-center mt-5">
+              <View className="flex-row items-center">
+                <Crown size={11} color="#D4AF37" />
+                <Text className="font-heebo text-xs text-navy-200 mr-1">
+                  Hila Travel — קישור מאובטח
+                </Text>
+              </View>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </>
   );
 }

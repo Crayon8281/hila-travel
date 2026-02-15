@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "Luxury Travel Planner",
-    "slug": "luxury-travel-planner",
+    "name": "Hila Travel",
+    "slug": "hila-travel",
+    "owner": "hila-travel",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,15 +15,37 @@
       "backgroundColor": "#001F3F"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.hila-travel.planner",
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      },
+      "associatedDomains": [
+        "applinks:hila-travel.app"
+      ]
     },
     "android": {
+      "package": "app.hilatravel.planner",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#001F3F"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "hila-travel.app",
+              "pathPrefix": "/trip/"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +57,17 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/YOUR_EAS_PROJECT_ID"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

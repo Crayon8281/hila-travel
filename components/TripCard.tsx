@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import { Calendar, User, ChevronLeft } from "lucide-react-native";
+import { Calendar, User, ChevronLeft, Crown } from "lucide-react-native";
 import {
   Trip,
   getStatusLabel,

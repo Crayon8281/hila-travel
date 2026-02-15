@@ -8,6 +8,7 @@ export interface Trip {
   end_date: string;
   status: "draft" | "proposal" | "confirmed";
   cover_image: string;
+  share_token?: string;
 }
 
 export interface TripDay {
@@ -122,6 +123,48 @@ let nextTemplateId = 9000;
 
 export function generateTemplateId(): string {
   return String(nextTemplateId++);
+}
+
+// === Trip Token (Deep Linking) ===
+
+export interface TripToken {
+  token: string;
+  tripId: string;
+  createdAt: number;
+  expiresAt: number | null; // null = never expires
+  isActive: boolean;
+}
+
+let tokenCounter = 0;
+
+/**
+ * Generate a URL-safe token for client-facing trip links.
+ * Format: hila-XXXXX-XXXXX (easy to read, luxury feel)
+ */
+export function generateTripToken(): string {
+  tokenCounter++;
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Removed ambiguous: I,O,0,1
+  const segment = (len: number) =>
+    Array.from({ length: len }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join("");
+  return `hila-${segment(5)}-${segment(5)}`;
+}
+
+/**
+ * Generate the full shareable URL for a trip token.
+ * Uses the app's deep link scheme for mobile and web URL for browsers.
+ */
+export function getTripShareUrl(token: string): string {
+  // Web URL (primary — works everywhere)
+  return `https://hila-travel.app/trip/${token}`;
+}
+
+/**
+ * Generate the Expo deep link URL for the trip token.
+ */
+export function getTripDeepLink(token: string): string {
+  return `luxurytravelplanner://trip/share/${token}`;
 }
 
 export const SAMPLE_TRIPS: Trip[] = [];

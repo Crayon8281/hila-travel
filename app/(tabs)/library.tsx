@@ -87,19 +87,19 @@ export default function LibraryScreen() {
             onPress={() => router.push("/asset/bulk-import")}
             className="flex-row items-center bg-navy rounded-xl px-3 py-2"
           >
-            <Text className="font-heebo-bold text-sm text-white ml-1">
+            <Link2 size={14} color="#D4AF37" />
+            <Text className="font-heebo-bold text-sm text-white mr-1.5">
               ייבוא
             </Text>
-            <Link2 size={14} color="#D4AF37" />
           </Pressable>
           <Pressable
             onPress={() => router.push("/asset/new")}
             className="flex-row items-center bg-gold rounded-xl px-3 py-2"
           >
-            <Text className="font-heebo-bold text-sm text-white ml-1">
+            <Plus size={16} color="#FFFFFF" />
+            <Text className="font-heebo-bold text-sm text-white mr-1.5">
               הוסף נכס
             </Text>
-            <Plus size={16} color="#FFFFFF" />
           </Pressable>
         </View>
         <Text className="font-heebo text-sm text-navy-300">

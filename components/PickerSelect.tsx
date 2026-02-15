@@ -21,7 +21,7 @@ export function PickerSelect({
 
   return (
     <View className="mb-4">
-      <Text className="font-heebo-medium text-sm text-navy mb-1.5">
+      <Text className="font-heebo-medium text-sm text-navy mb-1.5 text-right">
         {label}
       </Text>
       <Pressable

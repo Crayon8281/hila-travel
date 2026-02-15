@@ -7,6 +7,7 @@ import {
   Pressable,
   Linking,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
 import {
@@ -23,6 +24,7 @@ import {
   Sparkles,
   Calendar,
   MessageCircle,
+  ShieldX,
   Crown,
 } from "lucide-react-native";
 import { useTripContext } from "@/services/TripContext";
@@ -30,7 +32,6 @@ import { useAssetContext } from "@/services/AssetContext";
 import { formatHebrewDate } from "@/services/tripData";
 import { Asset } from "@/services/mockData";
 
-// Map Hebrew asset types to icons
 function getTypeIcon(type: string, size: number, color: string) {
   switch (type) {
     case "מלון":
@@ -57,8 +58,9 @@ function openMaps(address: string) {
       ? `maps:0,0?q=${encoded}`
       : `geo:0,0?q=${encoded}`;
   Linking.openURL(url).catch(() => {
-    // Fallback to Google Maps web
-    Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encoded}`);
+    Linking.openURL(
+      `https://www.google.com/maps/search/?api=1&query=${encoded}`
+    );
   });
 }
 
@@ -83,26 +85,24 @@ function TimelineActivity({
 
   return (
     <View className="flex-row mb-0">
-      {/* Timeline Spine (Right side for RTL) */}
+      {/* Timeline Spine */}
       <View className="items-center w-12">
-        {/* Icon Circle */}
         <View
           className="w-10 h-10 rounded-full items-center justify-center z-10"
           style={{ backgroundColor: "#D4AF37" }}
         >
           {getTypeIcon(asset.type, 18, "#001F3F")}
         </View>
-        {/* Connecting Line */}
         {!isLast && (
-          <View className="w-0.5 flex-1 bg-gold-200" style={{ minHeight: 20 }} />
+          <View
+            className="w-0.5 flex-1 bg-gold-200"
+            style={{ minHeight: 20 }}
+          />
         )}
       </View>
 
       {/* Activity Card */}
-      <View
-        className="flex-1 mr-4 mb-5"
-        style={{ marginTop: -2 }}
-      >
+      <View className="flex-1 mr-4 mb-5" style={{ marginTop: -2 }}>
         <View
           className="bg-white rounded-2xl overflow-hidden border border-navy-50"
           style={{
@@ -113,7 +113,6 @@ function TimelineActivity({
             elevation: 5,
           }}
         >
-          {/* Hero Image */}
           {hasImage && (
             <View className="relative">
               <Image
@@ -121,21 +120,12 @@ function TimelineActivity({
                 className="w-full h-48"
                 resizeMode="cover"
               />
-              {/* Gradient overlay at bottom of image */}
-              <View
-                className="absolute bottom-0 left-0 right-0 h-16"
-                style={{
-                  backgroundColor: "transparent",
-                }}
-              />
-              {/* Type badge on image */}
               <View className="absolute top-3 right-3 bg-navy/80 rounded-full px-3 py-1 flex-row items-center">
                 {getTypeIcon(asset.type, 12, "#D4AF37")}
                 <Text className="font-heebo-medium text-xs text-gold mr-1.5">
                   {asset.type}
                 </Text>
               </View>
-              {/* Time badge on image */}
               {startTime ? (
                 <View className="absolute top-3 left-3 bg-white/90 rounded-full px-3 py-1 flex-row items-center">
                   <Clock size={12} color="#001F3F" />
@@ -147,9 +137,7 @@ function TimelineActivity({
             </View>
           )}
 
-          {/* Content */}
           <View className="p-4">
-            {/* Title + Time (if no image) */}
             {!hasImage && startTime ? (
               <View className="flex-row items-center justify-end mb-1">
                 <Clock size={12} color="#D4AF37" />
@@ -159,7 +147,6 @@ function TimelineActivity({
               </View>
             ) : null}
 
-            {/* Type badge if no image */}
             {!hasImage && (
               <View className="flex-row justify-end mb-2">
                 <View className="bg-gold-50 rounded-full px-3 py-1 flex-row items-center">
@@ -175,7 +162,6 @@ function TimelineActivity({
               {asset.title}
             </Text>
 
-            {/* Location */}
             <View className="flex-row items-center justify-end mb-3">
               <MapPin size={13} color="#8099B3" />
               <Text className="font-heebo text-sm text-navy-200 mr-1">
@@ -183,12 +169,10 @@ function TimelineActivity({
               </Text>
             </View>
 
-            {/* Description */}
             <Text className="font-heebo text-sm text-navy-300 text-right leading-5 mb-4">
               {asset.description_he}
             </Text>
 
-            {/* Custom Note */}
             {customNote ? (
               <View className="bg-navy-50 rounded-xl p-3 mb-4">
                 <View className="flex-row items-center justify-end mb-1">
@@ -203,7 +187,6 @@ function TimelineActivity({
               </View>
             ) : null}
 
-            {/* Expert Notes - Hila's Tips */}
             {asset.expert_notes ? (
               <View className="bg-gold-50 rounded-xl p-3 mb-4 border border-gold-100">
                 <View className="flex-row items-center justify-end mb-1.5">
@@ -218,9 +201,7 @@ function TimelineActivity({
               </View>
             ) : null}
 
-            {/* Action Buttons */}
             <View className="flex-row justify-end" style={{ gap: 10 }}>
-              {/* Navigate Button */}
               {asset.address ? (
                 <Pressable
                   onPress={() => openMaps(asset.address!)}
@@ -240,7 +221,6 @@ function TimelineActivity({
                 </Pressable>
               ) : null}
 
-              {/* Call Button */}
               {asset.phone ? (
                 <Pressable
                   onPress={() => openPhone(asset.phone!)}
@@ -267,7 +247,6 @@ function TimelineActivity({
   );
 }
 
-// Day separator component
 function DaySeparator({
   dayNumber,
   date,
@@ -294,17 +273,17 @@ function DaySeparator({
   );
 }
 
-export default function ClientTimelineScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { getTrip, getDaysForTrip, getActivitiesForDay } = useTripContext();
+export default function SharedTripScreen() {
+  const { token } = useLocalSearchParams<{ token: string }>();
+  const { getTripByToken, getDaysForTrip, getActivitiesForDay } =
+    useTripContext();
   const { getAsset } = useAssetContext();
 
-  const trip = getTrip(id);
+  const trip = getTripByToken(token);
 
-  // Build the full timeline data
   const timelineData = useMemo(() => {
     if (!trip) return [];
-    const days = getDaysForTrip(id);
+    const days = getDaysForTrip(trip._id);
 
     return days
       .map((day) => {
@@ -322,15 +301,44 @@ export default function ClientTimelineScreen() {
         };
       })
       .filter((d) => d.activities.length > 0);
-  }, [trip, id, getDaysForTrip, getActivitiesForDay, getAsset]);
+  }, [trip, getDaysForTrip, getActivitiesForDay, getAsset]);
 
+  // Invalid or expired token
   if (!trip) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Text className="font-heebo-bold text-lg text-navy">
-          הטיול לא נמצא
-        </Text>
-      </View>
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 items-center justify-center bg-white px-8">
+          <View
+            className="w-20 h-20 rounded-full items-center justify-center mb-6"
+            style={{ backgroundColor: "#FEF2F2" }}
+          >
+            <ShieldX size={36} color="#EF4444" />
+          </View>
+          <Text className="font-heebo-bold text-2xl text-navy text-center mb-3">
+            הקישור לא נמצא
+          </Text>
+          <Text className="font-heebo text-base text-navy-200 text-center mb-2">
+            ייתכן שהקישור פג תוקף או שאינו תקין.
+          </Text>
+          <Text className="font-heebo text-sm text-navy-200 text-center">
+            אנא פני למארגנת הטיול לקבלת קישור חדש.
+          </Text>
+
+          {/* Branding Footer */}
+          <View className="absolute bottom-10 items-center">
+            <View className="flex-row items-center mb-1">
+              <Crown size={14} color="#D4AF37" />
+              <Text className="font-heebo-bold text-sm text-navy mr-1.5">
+                Hila Travel
+              </Text>
+            </View>
+            <Text className="font-heebo text-xs text-navy-200">
+              חוויות נסיעה יוקרתיות
+            </Text>
+          </View>
+        </View>
+      </>
     );
   }
 
@@ -341,17 +349,13 @@ export default function ClientTimelineScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen options={{ headerShown: false }} />
       <ScrollView
         className="flex-1 bg-white"
         contentContainerStyle={{ paddingBottom: 60 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Premium Header */}
+        {/* Premium Header with Branding */}
         <View className="bg-navy pt-14 pb-8 px-6">
           {/* Hila Travel Logo Area */}
           <View className="items-center mb-4">
@@ -379,12 +383,16 @@ export default function ClientTimelineScreen() {
           <View className="flex-row items-center justify-center mb-4">
             <Calendar size={14} color="#D4AF37" />
             <Text className="font-heebo text-sm text-white/60 mr-2">
-              {formatHebrewDate(trip.start_date)} — {formatHebrewDate(trip.end_date)}
+              {formatHebrewDate(trip.start_date)} —{" "}
+              {formatHebrewDate(trip.end_date)}
             </Text>
           </View>
 
           {/* Stats Row */}
-          <View className="flex-row items-center justify-center" style={{ gap: 24 }}>
+          <View
+            className="flex-row items-center justify-center"
+            style={{ gap: 24 }}
+          >
             <View className="items-center">
               <Text className="font-heebo-bold text-xl text-gold">
                 {timelineData.length}
@@ -396,11 +404,12 @@ export default function ClientTimelineScreen() {
               <Text className="font-heebo-bold text-xl text-gold">
                 {totalActivities}
               </Text>
-              <Text className="font-heebo text-xs text-white/40">פעילויות</Text>
+              <Text className="font-heebo text-xs text-white/40">
+                פעילויות
+              </Text>
             </View>
           </View>
 
-          {/* Gold accent line */}
           <View className="h-0.5 bg-gold/20 rounded-full mt-6" />
         </View>
 
@@ -420,10 +429,7 @@ export default function ClientTimelineScreen() {
           ) : (
             timelineData.map(({ day, activities }) => (
               <View key={day._id}>
-                {/* Day Header */}
                 <DaySeparator dayNumber={day.day_number} date={day.date} />
-
-                {/* Activities for this day */}
                 {activities.map((act, actIdx) => (
                   <TimelineActivity
                     key={act._id}
@@ -432,7 +438,8 @@ export default function ClientTimelineScreen() {
                     customNote={act.custom_note}
                     isLast={
                       actIdx === activities.length - 1 &&
-                      day._id === timelineData[timelineData.length - 1].day._id
+                      day._id ===
+                        timelineData[timelineData.length - 1].day._id
                     }
                   />
                 ))}

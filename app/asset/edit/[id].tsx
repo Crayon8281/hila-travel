@@ -121,7 +121,7 @@ export default function EditAssetScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Section: Basic Info */}
-          <Text className="font-heebo-bold text-lg text-navy mb-4">
+          <Text className="font-heebo-bold text-lg text-navy mb-4 text-right">
             פרטים בסיסיים
           </Text>
 
@@ -168,7 +168,7 @@ export default function EditAssetScreen() {
           />
 
           {/* Section: Description */}
-          <Text className="font-heebo-bold text-lg text-navy mb-4 mt-6">
+          <Text className="font-heebo-bold text-lg text-navy mb-4 mt-6 text-right">
             תיאור ותוכן
           </Text>
 
@@ -201,7 +201,7 @@ export default function EditAssetScreen() {
           />
 
           {/* Section: Pricing */}
-          <Text className="font-heebo-bold text-lg text-navy mb-4 mt-6">
+          <Text className="font-heebo-bold text-lg text-navy mb-4 mt-6 text-right">
             תמחור
           </Text>
 
@@ -251,10 +251,10 @@ export default function EditAssetScreen() {
             onPress={handleSave}
             className="flex-row items-center justify-center bg-gold rounded-xl py-4"
           >
-            <Text className="font-heebo-bold text-base text-white ml-2">
+            <Save size={20} color="#FFFFFF" />
+            <Text className="font-heebo-bold text-base text-white mr-2">
               שמור שינויים
             </Text>
-            <Save size={20} color="#FFFFFF" />
           </Pressable>
         </View>
       </View>

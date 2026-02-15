@@ -8,7 +8,7 @@ interface FormFieldProps extends TextInputProps {
 export function FormField({ label, error, ...inputProps }: FormFieldProps) {
   return (
     <View className="mb-4">
-      <Text className="font-heebo-medium text-sm text-navy mb-1.5">
+      <Text className="font-heebo-medium text-sm text-navy mb-1.5 text-right">
         {label}
       </Text>
       <TextInput
@@ -23,7 +23,7 @@ export function FormField({ label, error, ...inputProps }: FormFieldProps) {
         ]}
       />
       {error && (
-        <Text className="font-heebo text-xs text-red-500 mt-1">{error}</Text>
+        <Text className="font-heebo text-xs text-red-500 mt-1 text-right">{error}</Text>
       )}
     </View>
   );

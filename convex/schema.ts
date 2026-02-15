@@ -32,7 +32,10 @@ export default defineSchema({
       v.literal("confirmed")
     ),
     cover_image: v.string(),
-  }).index("by_status", ["status"]),
+    share_token: v.optional(v.string()),
+  })
+    .index("by_status", ["status"])
+    .index("by_share_token", ["share_token"]),
 
   trip_days: defineTable({
     tripId: v.id("trips"),

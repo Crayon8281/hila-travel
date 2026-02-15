@@ -98,6 +98,10 @@ function RootLayoutNav() {
               name="trip/client/[id]"
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="trip/share/[token]"
+              options={{ headerShown: false }}
+            />
           </Stack>
         </ThemeProvider>
       </TripProvider>

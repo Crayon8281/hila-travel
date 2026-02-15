@@ -70,17 +70,17 @@ export default function AssetDetailScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Type & Location Header */}
         <View className="bg-navy px-4 pt-4 pb-6 rounded-b-3xl">
-          <View className="bg-gold/20 self-start px-3 py-1 rounded-full mb-3">
+          <View className="bg-gold/20 self-end px-3 py-1 rounded-full mb-3">
             <Text className="font-heebo-medium text-sm text-gold-100">
               {asset.type}
             </Text>
           </View>
-          <Text className="font-heebo-bold text-2xl text-white mb-2">
+          <Text className="font-heebo-bold text-2xl text-white mb-2 text-right">
             {asset.title}
           </Text>
           <View className="flex-row items-center">
             <MapPin size={16} color="#D4AF37" />
-            <Text className="font-heebo text-base text-gold-200 ml-2">
+            <Text className="font-heebo text-base text-gold-200 mr-2">
               {asset.city}, {asset.country}
             </Text>
           </View>
@@ -132,11 +132,11 @@ export default function AssetDetailScreen() {
         <View className="px-4 mt-6">
           <View className="flex-row items-center mb-2">
             <FileText size={16} color="#001F3F" />
-            <Text className="font-heebo-bold text-base text-navy ml-2">
+            <Text className="font-heebo-bold text-base text-navy mr-2">
               תיאור
             </Text>
           </View>
-          <Text className="font-heebo text-sm text-navy-300 leading-6">
+          <Text className="font-heebo text-sm text-navy-300 leading-6 text-right">
             {asset.description_he}
           </Text>
         </View>
@@ -146,12 +146,12 @@ export default function AssetDetailScreen() {
           <View className="px-4 mt-6">
             <View className="flex-row items-center mb-2">
               <ArrowRight size={16} color="#D4AF37" />
-              <Text className="font-heebo-bold text-base text-navy ml-2">
+              <Text className="font-heebo-bold text-base text-navy mr-2">
                 הערות מומחה
               </Text>
             </View>
             <View className="bg-gold-50 rounded-xl p-4 border border-gold-100">
-              <Text className="font-heebo text-sm text-navy-400 leading-6">
+              <Text className="font-heebo text-sm text-navy-400 leading-6 text-right">
                 {asset.expert_notes}
               </Text>
             </View>
@@ -162,7 +162,7 @@ export default function AssetDetailScreen() {
         <View className="px-4 mt-6">
           <View className="flex-row items-center mb-2">
             <Tag size={16} color="#001F3F" />
-            <Text className="font-heebo-bold text-base text-navy ml-2">
+            <Text className="font-heebo-bold text-base text-navy mr-2">
               תגיות
             </Text>
           </View>
@@ -191,10 +191,10 @@ export default function AssetDetailScreen() {
           onPress={() => router.push(`/asset/edit/${asset._id}`)}
           className="flex-1 flex-row items-center justify-center bg-gold rounded-xl py-3"
         >
-          <Text className="font-heebo-bold text-base text-white ml-2">
+          <Pencil size={18} color="#FFFFFF" />
+          <Text className="font-heebo-bold text-base text-white mr-2">
             ערוך נכס
           </Text>
-          <Pencil size={18} color="#FFFFFF" />
         </Pressable>
       </View>
     </View>

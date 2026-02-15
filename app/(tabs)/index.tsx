@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Pressable } from "react-native";
 import { router } from "expo-router";
-import { Plus, Map } from "lucide-react-native";
+import { Plus, Map, Crown } from "lucide-react-native";
 import { useTripContext } from "@/services/TripContext";
 import { TripCard } from "@/components/TripCard";
 
@@ -12,14 +12,17 @@ export default function TripsScreen() {
       {trips.length === 0 ? (
         /* Empty State */
         <View className="flex-1 items-center justify-center px-8">
-          <View className="w-20 h-20 rounded-full bg-navy-50 items-center justify-center mb-5">
-            <Map size={36} color="#001F3F" strokeWidth={1.5} />
+          <View
+            className="w-20 h-20 rounded-full items-center justify-center mb-5"
+            style={{ backgroundColor: "#001F3F" }}
+          >
+            <Crown size={36} color="#D4AF37" strokeWidth={1.5} />
           </View>
-          <Text className="font-heebo-bold text-2xl text-navy mb-2">
-            אין טיולים עדיין
+          <Text className="font-heebo-bold text-2xl text-navy mb-2 text-center">
+            ברוכה הבאה, הילה
           </Text>
-          <Text className="font-heebo text-base text-navy-200 text-center mb-8">
-            צרי טיול חדש כדי להתחיל לתכנן חוויה בלתי נשכחת ללקוחות שלך
+          <Text className="font-heebo text-base text-navy-200 text-center mb-8 leading-6">
+            צרי טיול חדש כדי להתחיל לתכנן{"\n"}חוויה בלתי נשכחת ללקוחות שלך
           </Text>
           <Pressable
             onPress={() => router.push("/trip/new")}
@@ -43,7 +46,7 @@ export default function TripsScreen() {
         <FlatList
           data={trips}
           keyExtractor={(item) => item._id}
-          contentContainerStyle={{ paddingTop: 16, paddingBottom: 100 }}
+          contentContainerStyle={{ paddingTop: 8, paddingBottom: 100 }}
           renderItem={({ item }) => (
             <TripCard
               trip={item}
@@ -52,15 +55,30 @@ export default function TripsScreen() {
             />
           )}
           ListHeaderComponent={
-            <View className="flex-row items-center justify-between px-4 mb-4">
-              <Pressable
-                onPress={() => router.push("/trip/new")}
-                className="bg-gold rounded-full w-10 h-10 items-center justify-center"
-              >
-                <Plus size={20} color="#001F3F" />
-              </Pressable>
-              <Text className="font-heebo text-sm text-navy-200">
-                {trips.length} טיולים
+            <View className="px-4 mb-4">
+              {/* Branded Sub-header */}
+              <View className="flex-row items-center justify-between mb-3">
+                <Pressable
+                  onPress={() => router.push("/trip/new")}
+                  className="bg-gold rounded-full w-10 h-10 items-center justify-center"
+                  style={{
+                    shadowColor: "#D4AF37",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 6,
+                    elevation: 3,
+                  }}
+                >
+                  <Plus size={20} color="#001F3F" />
+                </Pressable>
+                <View className="flex-row items-center">
+                  <Text className="font-heebo-bold text-lg text-navy">
+                    הטיולים שלי
+                  </Text>
+                </View>
+              </View>
+              <Text className="font-heebo text-sm text-navy-200 text-right">
+                {trips.length} טיולים פעילים
               </Text>
             </View>
           }

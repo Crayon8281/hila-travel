@@ -29,28 +29,28 @@ export function AssetCard({ asset, onPress }: AssetCardProps) {
         </View>
         <View className="flex-row items-center">
           <DollarSign size={14} color="#D4AF37" />
-          <Text className="font-heebo-bold text-sm text-gold ml-1">
+          <Text className="font-heebo-bold text-sm text-gold mr-1">
             {asset.selling_price.toLocaleString()}
           </Text>
         </View>
       </View>
 
       {/* Title */}
-      <Text className="font-heebo-bold text-lg text-navy mb-1">
+      <Text className="font-heebo-bold text-lg text-navy mb-1 text-right">
         {asset.title}
       </Text>
 
       {/* Location */}
       <View className="flex-row items-center mb-2">
         <MapPin size={14} color="#8099B3" />
-        <Text className="font-heebo text-sm text-navy-200 ml-1">
+        <Text className="font-heebo text-sm text-navy-200 mr-1">
           {asset.city}, {asset.country}
         </Text>
       </View>
 
       {/* Description preview */}
       <Text
-        className="font-heebo text-sm text-navy-300 mb-3"
+        className="font-heebo text-sm text-navy-300 mb-3 text-right"
         numberOfLines={2}
       >
         {asset.description_he}
@@ -61,7 +61,7 @@ export function AssetCard({ asset, onPress }: AssetCardProps) {
         {asset.tags.slice(0, 3).map((tag) => (
           <View key={tag} className="flex-row items-center mr-2 mb-1">
             <Tag size={10} color="#B3C2D1" />
-            <Text className="font-heebo text-xs text-navy-200 ml-1">
+            <Text className="font-heebo text-xs text-navy-200 mr-1">
               {tag}
             </Text>
           </View>
